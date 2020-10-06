@@ -5,6 +5,8 @@
 import requests
 import json
 import gpxpy
+from decimal import Decimal
+from flask import jsonify
 
 filename = open("09_27_20.gpx", 'r')
 gpx = gpxpy.parse(filename)
@@ -12,22 +14,36 @@ gpx = gpxpy.parse(filename)
 lats = []
 longs = []
 
-for route in gpx.routes:
-	for point in route.points:
-		lats.append(float(point.latitude))
-		longs.append(float(point.longitude))
+for track in gpx.tracks:
+	for segment in track.segments:
+		for point in segment.points:
+			lats.append(Decimal(point.latitude))
+			longs.append(Decimal(point.longitude))
+
 
 def jprint(obj):
-    text = json.dumps(obj, sort_keys=True, indent=4)
+    text = json.dumps(obj)
     print(text)
 
 addys = []
 
+i = 0
+
 for l in lats:
-	response = requests.get("https://geoservices.tamu.edu/Services/ReverseGeocoding/Webservice/v04_01/HTTP/default.aspx",
-	apiKey = "eb6a7ee7e8ad43f69ea61d99c1b228daa", version = 410, lat = lats[l], lon = longs[l], format = "json")
-	addys = response.json()['StreetAddresses']
-	jprint(addys)
+	parameters = {
+		"apiKey" : "eb6a7ee7e8ad43f69ea61d99c1b228daa", 
+		"version" : "4.10", 
+		"lat" : lats[i],
+		"lon" : longs[i],
+		"format" : "json"
+	}
+
+	response = requests.get("https://geoservices.tamu.edu/Services/ReverseGeocoding/Webservice/v04_01/HTTP/default.aspx", params = parameters)
+	jprint(response.json())
+	addy = response.json()['StreetAddresses']
+	jprint(addy)
+	addys.append(addy)
+	i += 1
 
 streetAddys = []
 
