@@ -22,16 +22,16 @@ for track in gpx.tracks:
 
 
 def jprint(obj):
-    text = json.dumps(obj)
-    print(text)
+    print(json.dumps(obj))
 
 addys = []
+#addys will hold the street addresses
 
 i = 0
 
 for l in lats:
 	parameters = {
-		"apiKey" : "eb6a7ee7e8ad43f69ea61d99c1b28daa", 
+		"apiKey" : "eb6a7ee7e8ad43f69ea61d99c1b28daa",
 		"version" : "4.10", 
 		"lat" : lats[i],
 		"lon" : longs[i],
@@ -39,16 +39,8 @@ for l in lats:
 	}
 
 	response = requests.get("https://geoservices.tamu.edu/Services/ReverseGeocoding/Webservice/v04_01/HTTP/default.aspx", params = parameters)
-	jprint(response.json())
 	addy = response.json()['StreetAddresses']
-	jprint(addy)
+	#jprint(addy)
 	addys.append(addy)
 	i += 1
 
-streetAddys = []
-
-for a in addys:
-    address = a['StreetAddress']
-    streetAddys.append(address)
-
-print(streetAddys)
