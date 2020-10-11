@@ -31,7 +31,7 @@ i = 0
 
 for l in lats:
 	parameters = {
-		"apiKey" : "eb6a7ee7e8ad43f69ea61d99c1b228daa", 
+		"apiKey" : "eb6a7ee7e8ad43f69ea61d99c1b28daa", 
 		"version" : "4.10", 
 		"lat" : lats[i],
 		"lon" : longs[i],
